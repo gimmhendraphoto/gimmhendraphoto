@@ -1,0 +1,183 @@
+<?php
+include 'function.php';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Barang</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <script src="js/sweetalert2.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="mt-4">Data Barang</h1>
+        <!-- Button trigger modal -->
+        <div class="mb-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                Tambah Data Barang
+            </button>
+        </div>
+        <table class="table table-bordered border-black">
+            <thead class="bg-warning">
+                <tr style="text-align: center;">
+                    <th class="text-white">No</th>
+                    <th class="text-white">Kode Barang</th>
+                    <th class="text-white">Nama Barang</th>
+                    <th class="text-white">Stok Barang</th>
+                    <th class="text-white">Harga Modal</th>
+                    <th class="text-white">Harga Jual</th>
+                    <th class="text-white">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $query = "SELECT * FROM barang";
+                $data_barang = mysqli_query($conn, $query);
+                $no = 1;
+                while ($barang = mysqli_fetch_array($data_barang)) : ?>
+                    <tr style="text-align: center;">
+                        <td><?php echo $no ?></td>
+                        <td><?php echo $barang['kode_barang'] ?></td>
+                        <td><?php echo $barang['nama_barang'] ?></td>
+                        <td><?php echo $barang['stok'] ?></td>
+                        <td><?php echo $barang['harga_modal'] ?></td>
+                        <td><?php echo $barang['harga_jual'] ?></td>
+                        <td>
+                            <!-- Button trigger edit modal -->
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $barang['kode_barang'] ?>">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<?php echo $barang['kode_barang'] ?>">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal -->
+                    <div class="modal fade" id="editModal<?php echo $barang['kode_barang'] ?>" tabindex="-1" aria-labelledby="editModalLabel<?php echo $barang['kode_barang'] ?>" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="editModalLabel<?php echo $barang['kode_barang'] ?>">Edit Data Barang</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="function.php" method="post">
+                                        <input type="hidden" name="kode_barang" value="<?php echo $barang['kode_barang'] ?>">
+                                        <div class="mb-3">
+                                            <label for="nama_barang">Nama Barang</label>
+                                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" value="<?php echo $barang['nama_barang'] ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="stok">Jumlah Stok</label>
+                                            <input type="text" name="stok" id="stok" class="form-control" value="<?php echo $barang['stok'] ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="harga_modal">Harga Modal</label>
+                                            <input type="text" name="harga_modal" id="harga_modal" class="form-control" value="<?php echo $barang['harga_modal'] ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="harga_jual">Harga Jual</label>
+                                            <input type="text" name="harga_jual" id="harga_jual" class="form-control" value="<?php echo $barang['harga_jual'] ?>">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php $no++ ?>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addModalLabel">Form Input Data Barang</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="function.php" method="post">
+                        <div class="mb-3">
+                            <label for="kode_barang">Kode Barang</label>
+                            <input type="text" name="kode_barang" id="kode_barang" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nama_barang">Nama Barang</label>
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stok">Jumlah Stok</label>
+                            <input type="text" name="stok" id="stok" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="harga_modal">Harga Modal</label>
+                            <input type="text" name="harga_modal" id="harga_modal" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="harga_jual">Harga Jual</label>
+                            <input type="text" name="harga_jual" id="harga_jual" class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(kodeBarang) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Apakah Anda yakin?",
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Tidak, batalkan!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'function.php?delete=' + kodeBarang;
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Dibatalkan",
+                        text: "Data Anda aman :)",
+                        icon: "error"
+                    });
+                }
+            })
+        };
+    </script>
+
+</body>
+
+</html>
